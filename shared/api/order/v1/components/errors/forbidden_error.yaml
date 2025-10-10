@@ -1,0 +1,8 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Сообщение об ошибке отказа в доступе
+    example: "Access forbidden"
+required:
+  - error

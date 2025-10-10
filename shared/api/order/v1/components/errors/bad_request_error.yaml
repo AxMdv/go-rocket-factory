@@ -1,0 +1,8 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Сообщение об ошибке неправильного или некорректного запроса
+    example: "Invalid request data"
+required:
+  - error

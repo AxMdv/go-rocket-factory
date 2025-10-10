@@ -1,0 +1,8 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Сообщение об ошибке конфликта, например, когда заказ нельзя отменить
+    example: "Order already paid, cannot cancel"
+required:
+  - error
