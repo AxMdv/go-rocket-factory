@@ -1,0 +1,27 @@
+post:
+  summary: Создать заказ
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../components/create_order_request.yaml'
+  responses:
+    '200':
+      description: Заказ создан
+      content:
+        application/json:
+          schema:
+            $ref: '../components/create_order_response.yaml'
+    '400':
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: '../components/errors/bad_request_error.yaml'
+    '404':
+      description: Деталь не найдена
+      content:
+        application/json:
+          schema:
+            $ref: '../components/errors/not_found_error.yaml'
