@@ -1,5 +1,9 @@
+parameters:
+  - $ref: ../params/order_uuid.yaml
+  
 post:
   summary: Оплата заказа
+  operationId: PayOrder
   parameters:
     - $ref: '../params/order_uuid.yaml'
   requestBody:

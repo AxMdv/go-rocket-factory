@@ -1,5 +1,6 @@
 post:
   summary: Создать заказ
+  operationId: CreateOrder
   requestBody:
     required: true
     content:

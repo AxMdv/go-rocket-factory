@@ -7,11 +7,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// APIV1OrdersOrderUUIDCancelPostNoContent is response for APIV1OrdersOrderUUIDCancelPost operation.
-type APIV1OrdersOrderUUIDCancelPostNoContent struct{}
-
-func (*APIV1OrdersOrderUUIDCancelPostNoContent) aPIV1OrdersOrderUUIDCancelPostRes() {}
-
 // Ref: #/components/schemas/bad_request_error
 type BadRequestError struct {
 	// Сообщение об ошибке неправильного или некорректного
@@ -29,7 +24,12 @@ func (s *BadRequestError) SetError(val string) {
 	s.Error = val
 }
 
-func (*BadRequestError) aPIV1OrdersPostRes() {}
+func (*BadRequestError) createOrderRes() {}
+
+// CancelOrderNoContent is response for CancelOrder operation.
+type CancelOrderNoContent struct{}
+
+func (*CancelOrderNoContent) cancelOrderRes() {}
 
 // Ref: #/components/schemas/conflict_error
 type ConflictError struct {
@@ -48,7 +48,7 @@ func (s *ConflictError) SetError(val string) {
 	s.Error = val
 }
 
-func (*ConflictError) aPIV1OrdersOrderUUIDCancelPostRes() {}
+func (*ConflictError) cancelOrderRes() {}
 
 // Ref: #/components/schemas/create_order_request
 type CreateOrderRequest struct {
@@ -106,7 +106,7 @@ func (s *CreateOrderResponse) SetTotalPrice(val float64) {
 	s.TotalPrice = val
 }
 
-func (*CreateOrderResponse) aPIV1OrdersPostRes() {}
+func (*CreateOrderResponse) createOrderRes() {}
 
 // Ref: #/components/schemas/not_found_error
 type NotFoundError struct {
@@ -124,10 +124,10 @@ func (s *NotFoundError) SetError(val string) {
 	s.Error = val
 }
 
-func (*NotFoundError) aPIV1OrdersOrderUUIDCancelPostRes() {}
-func (*NotFoundError) aPIV1OrdersOrderUUIDGetRes()        {}
-func (*NotFoundError) aPIV1OrdersOrderUUIDPayPostRes()    {}
-func (*NotFoundError) aPIV1OrdersPostRes()                {}
+func (*NotFoundError) cancelOrderRes()    {}
+func (*NotFoundError) createOrderRes()    {}
+func (*NotFoundError) getOrderByUUIDRes() {}
+func (*NotFoundError) payOrderRes()       {}
 
 // NewOptNilUUID returns new OptNilUUID with value set to v.
 func NewOptNilUUID(v uuid.UUID) OptNilUUID {
@@ -324,7 +324,7 @@ func (s *OrderDto) SetStatus(val OrderStatus) {
 	s.Status = val
 }
 
-func (*OrderDto) aPIV1OrdersOrderUUIDGetRes() {}
+func (*OrderDto) getOrderByUUIDRes() {}
 
 // Статус заказа.
 // Ref: #/components/schemas/order_status
@@ -408,7 +408,7 @@ func (s *PayOrderResponse) SetTransactionUUID(val uuid.UUID) {
 	s.TransactionUUID = val
 }
 
-func (*PayOrderResponse) aPIV1OrdersOrderUUIDPayPostRes() {}
+func (*PayOrderResponse) payOrderRes() {}
 
 // Способ оплаты.
 // Ref: #/components/schemas/payment_method

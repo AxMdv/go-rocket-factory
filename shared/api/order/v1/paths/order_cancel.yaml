@@ -1,5 +1,9 @@
+parameters:
+  - $ref: ../params/order_uuid.yaml
+
 post:
   summary: Отмена заказа
+  operationId: CancelOrder
   parameters:
     - $ref: '../params/order_uuid.yaml'
   responses:
