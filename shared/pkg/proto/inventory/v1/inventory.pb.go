@@ -29,32 +29,32 @@ type Category int32
 
 const (
 	// UNKNOWN неизвестная категория.
-	Category_UNKNOWN Category = 0
+	Category_CATEGORY_UNKNOWN Category = 0
 	// ENGINE двигатель.
-	Category_ENGINE Category = 1
+	Category_CATEGORY_ENGINE Category = 1
 	// FUEL топливо.
-	Category_FUEL Category = 2
+	Category_CATEGORY_FUEL Category = 2
 	// PORTHOLE иллюминатор.
-	Category_PORTHOLE Category = 3
+	Category_CATEGORY_PORTHOLE Category = 3
 	// WING крыло.
-	Category_WING Category = 4
+	Category_CATEGORY_WING Category = 4
 )
 
 // Enum value maps for Category.
 var (
 	Category_name = map[int32]string{
-		0: "UNKNOWN",
-		1: "ENGINE",
-		2: "FUEL",
-		3: "PORTHOLE",
-		4: "WING",
+		0: "CATEGORY_UNKNOWN",
+		1: "CATEGORY_ENGINE",
+		2: "CATEGORY_FUEL",
+		3: "CATEGORY_PORTHOLE",
+		4: "CATEGORY_WING",
 	}
 	Category_value = map[string]int32{
-		"UNKNOWN":  0,
-		"ENGINE":   1,
-		"FUEL":     2,
-		"PORTHOLE": 3,
-		"WING":     4,
+		"CATEGORY_UNKNOWN":  0,
+		"CATEGORY_ENGINE":   1,
+		"CATEGORY_FUEL":     2,
+		"CATEGORY_PORTHOLE": 3,
+		"CATEGORY_WING":     4,
 	}
 )
 
@@ -369,7 +369,7 @@ func (x *Part) GetCategory() Category {
 	if x != nil {
 		return x.Category
 	}
-	return Category_UNKNOWN
+	return Category_CATEGORY_UNKNOWN
 }
 
 func (x *Part) GetDimensions() *Dimensions {
@@ -811,14 +811,13 @@ const file_inventory_v1_inventory_proto_rawDesc = "" +
 	"\fdouble_value\x18\x03 \x01(\x01H\x00R\vdoubleValue\x12\x1f\n" +
 	"\n" +
 	"bool_value\x18\x04 \x01(\bH\x00R\tboolValueB\x06\n" +
-	"\x04kind*E\n" +
-	"\bCategory\x12\v\n" +
-	"\aUNKNOWN\x10\x00\x12\n" +
-	"\n" +
-	"\x06ENGINE\x10\x01\x12\b\n" +
-	"\x04FUEL\x10\x02\x12\f\n" +
-	"\bPORTHOLE\x10\x03\x12\b\n" +
-	"\x04WING\x10\x042\xa8\x01\n" +
+	"\x04kind*r\n" +
+	"\bCategory\x12\x14\n" +
+	"\x10CATEGORY_UNKNOWN\x10\x00\x12\x13\n" +
+	"\x0fCATEGORY_ENGINE\x10\x01\x12\x11\n" +
+	"\rCATEGORY_FUEL\x10\x02\x12\x15\n" +
+	"\x11CATEGORY_PORTHOLE\x10\x03\x12\x11\n" +
+	"\rCATEGORY_WING\x10\x042\xa8\x01\n" +
 	"\x10InventoryService\x12F\n" +
 	"\aGetPart\x12\x1c.inventory.v1.GetPartRequest\x1a\x1d.inventory.v1.GetPartResponse\x12L\n" +
 	"\tListParts\x12\x1e.inventory.v1.ListPartsRequest\x1a\x1f.inventory.v1.ListPartsResponseBBZ@github.com/AxMdv/go-rocket-factory/shared/pkg/proto/inventory/v1b\x06proto3"

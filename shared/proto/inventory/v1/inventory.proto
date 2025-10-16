@@ -85,15 +85,15 @@ message PartsFilter {
 // Category описывает назначение детали.
 enum Category {
   // UNKNOWN неизвестная категория.
-  UNKNOWN = 0;
+  CATEGORY_UNKNOWN = 0;
   // ENGINE двигатель.
-  ENGINE = 1;
+  CATEGORY_ENGINE = 1;
   // FUEL топливо.
-  FUEL = 2;
+  CATEGORY_FUEL = 2;
   // PORTHOLE иллюминатор.
-  PORTHOLE = 3;
+  CATEGORY_PORTHOLE = 3;
   // WING крыло.
-  WING = 4;
+  CATEGORY_WING = 4;
 }
 
 // Dimensions описывает габариты детали.

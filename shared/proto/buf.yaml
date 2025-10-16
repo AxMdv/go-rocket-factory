@@ -8,4 +8,3 @@ lint:
     - RPC_RESPONSE_STANDARD_NAME
     - RPC_REQUEST_RESPONSE_UNIQUE
     - ENUM_ZERO_VALUE_SUFFIX #Enum zero value name "CATEGORY_UNKNOWN" should be suffixed with "_UNSPECIFIED"
-    - ENUM_VALUE_PREFIX #Enum value name "WING" should be prefixed with "CATEGORY_"
