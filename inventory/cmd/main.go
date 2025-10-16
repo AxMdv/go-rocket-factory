@@ -11,12 +11,13 @@ import (
 	"syscall"
 	"time"
 
-	inventoryV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/inventory/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	inventoryV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/inventory/v1"
 )
 
 const grpcPort = 50051
@@ -110,7 +111,6 @@ func (s *inventoryService) ListParts(ctx context.Context, req *inventoryV1.ListP
 	return &inventoryV1.ListPartsResponse{
 		Parts: filteredParts,
 	}, nil
-
 }
 
 func main() {

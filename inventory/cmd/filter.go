@@ -101,7 +101,6 @@ Outer:
 
 // Основная функция фильтрации (логическое И между полями)
 func filterParts(allParts map[string]*inventoryV1.Part, filter *inventoryV1.PartsFilter) []*inventoryV1.Part {
-
 	parts := filterByUUID(allParts, filter.Uuids)
 	parts = filterByNames(parts, filter.Names)
 	parts = filterByCategories(parts, filter.Categories)
