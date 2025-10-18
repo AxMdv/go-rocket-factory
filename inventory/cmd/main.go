@@ -114,7 +114,7 @@ func (s *inventoryService) ListParts(ctx context.Context, req *inventoryV1.ListP
 }
 
 func main() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", grpcPort))
 	if err != nil {
 		log.Printf("failed to listen: %v\n", err)
 		return
@@ -139,7 +139,7 @@ func main() {
 	reflection.Register(s)
 
 	go func() {
-		log.Printf("🚀 gRPC server listening on %d\n", grpcPort)
+		log.Printf("🚀 inventory gRPC server listening on %d\n", grpcPort)
 		err = s.Serve(lis)
 		if err != nil {
 			log.Printf("failed to serve: %v\n", err)
