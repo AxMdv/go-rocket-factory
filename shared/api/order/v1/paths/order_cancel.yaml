@@ -9,6 +9,12 @@ post:
   responses:
     '204':
       description: Заказ успешно отменён
+    '400':
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: '../components/errors/bad_request_error.yaml'
     '404':
       description: Заказ не найден
       content:
@@ -21,3 +27,9 @@ post:
         application/json:
           schema:
             $ref: '../components/errors/conflict_error.yaml'
+    '500':
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: '../components/errors/internal_server_error.yaml'

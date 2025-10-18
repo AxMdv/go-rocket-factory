@@ -13,9 +13,21 @@ get:
         application/json:
           schema:
             $ref: '../components/order_dto.yaml'
+    '400':
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: '../components/errors/bad_request_error.yaml'
     '404':
       description: Заказ не найден
       content:
         application/json:
           schema:
             $ref: '../components/errors/not_found_error.yaml'
+    '500':
+      description: Внутренняя ошибка сервера
+      content:
+        application/json:
+          schema:
+            $ref: '../components/errors/internal_server_error.yaml'

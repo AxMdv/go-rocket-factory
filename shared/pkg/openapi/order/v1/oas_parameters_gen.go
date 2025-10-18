@@ -7,7 +7,6 @@ import (
 	"net/url"
 
 	"github.com/go-faster/errors"
-	"github.com/google/uuid"
 
 	"github.com/ogen-go/ogen/conv"
 	"github.com/ogen-go/ogen/middleware"
@@ -19,7 +18,7 @@ import (
 // CancelOrderParams is parameters of CancelOrder operation.
 type CancelOrderParams struct {
 	// Уникальный идентификатор заказа.
-	OrderUUID uuid.UUID
+	OrderUUID string
 }
 
 func unpackCancelOrderParams(packed middleware.Parameters) (params CancelOrderParams) {
@@ -28,7 +27,7 @@ func unpackCancelOrderParams(packed middleware.Parameters) (params CancelOrderPa
 			Name: "order_uuid",
 			In:   "path",
 		}
-		params.OrderUUID = packed[key].(uuid.UUID)
+		params.OrderUUID = packed[key].(string)
 	}
 	return params
 }
@@ -58,7 +57,7 @@ func decodeCancelOrderParams(args [1]string, argsEscaped bool, r *http.Request) 
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToString(val)
 				if err != nil {
 					return err
 				}
@@ -85,7 +84,7 @@ func decodeCancelOrderParams(args [1]string, argsEscaped bool, r *http.Request) 
 // GetOrderByUUIDParams is parameters of GetOrderByUUID operation.
 type GetOrderByUUIDParams struct {
 	// Уникальный идентификатор заказа.
-	OrderUUID uuid.UUID
+	OrderUUID string
 }
 
 func unpackGetOrderByUUIDParams(packed middleware.Parameters) (params GetOrderByUUIDParams) {
@@ -94,7 +93,7 @@ func unpackGetOrderByUUIDParams(packed middleware.Parameters) (params GetOrderBy
 			Name: "order_uuid",
 			In:   "path",
 		}
-		params.OrderUUID = packed[key].(uuid.UUID)
+		params.OrderUUID = packed[key].(string)
 	}
 	return params
 }
@@ -124,7 +123,7 @@ func decodeGetOrderByUUIDParams(args [1]string, argsEscaped bool, r *http.Reques
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToString(val)
 				if err != nil {
 					return err
 				}
@@ -151,7 +150,7 @@ func decodeGetOrderByUUIDParams(args [1]string, argsEscaped bool, r *http.Reques
 // PayOrderParams is parameters of PayOrder operation.
 type PayOrderParams struct {
 	// Уникальный идентификатор заказа.
-	OrderUUID uuid.UUID
+	OrderUUID string
 }
 
 func unpackPayOrderParams(packed middleware.Parameters) (params PayOrderParams) {
@@ -160,7 +159,7 @@ func unpackPayOrderParams(packed middleware.Parameters) (params PayOrderParams) 
 			Name: "order_uuid",
 			In:   "path",
 		}
-		params.OrderUUID = packed[key].(uuid.UUID)
+		params.OrderUUID = packed[key].(string)
 	}
 	return params
 }
@@ -190,7 +189,7 @@ func decodePayOrderParams(args [1]string, argsEscaped bool, r *http.Request) (pa
 					return err
 				}
 
-				c, err := conv.ToUUID(val)
+				c, err := conv.ToString(val)
 				if err != nil {
 					return err
 				}

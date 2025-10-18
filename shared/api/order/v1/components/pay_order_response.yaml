@@ -4,6 +4,5 @@ required:
 properties:
   transaction_uuid:
     type: string
-    format: uuid
     description: UUID проведённой транзакции
     example: "trans-5678-abcd-1234-ef567890abcd"

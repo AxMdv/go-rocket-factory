@@ -8,19 +8,16 @@ required:
 properties:
   order_uuid:
     type: string
-    format: uuid
     description: UUID заказа
     example: "abc12345-def6-7890-ab12-cdef34567890"
   user_uuid:
     type: string
-    format: uuid
     description: UUID пользователя, сделавшего заказ
     example: "123e4567-e89b-12d3-a456-426614174000"
   part_uuids:
     type: array
     items:
       type: string
-      format: uuid
       description: UUID детали
       example: "987e6543-e21b-12d3-a456-426655440000"
     description: Список деталей, включённых в заказ
@@ -32,7 +29,6 @@ properties:
     example: 12345.67
   transaction_uuid:
     type: string
-    format: uuid
     nullable: true
     description: UUID транзакции оплаты (если заказ оплачен)
     example: "trans-5678-abcd-1234-ef567890abcd"

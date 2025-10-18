@@ -5,14 +5,12 @@ required:
 properties:
   user_uuid:
     type: string
-    format: uuid
     description: UUID пользователя, создающего заказ
     example: "123e4567-e89b-12d3-a456-426614174000"
   part_uuids:
     type: array
     items:
       type: string
-      format: uuid
       description: UUID детали для заказа
       example: "987e6543-e21b-12d3-a456-426655440000"
     description: Список UUID деталей, входящих в заказ
