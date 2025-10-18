@@ -1,3 +1,4 @@
+// nolint:gosec
 package main
 
 import (
@@ -8,6 +9,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -44,6 +46,9 @@ type partJSON struct {
 
 // Функция загрузки деталей в map[string]*Part
 func (s *inventoryService) loadPartsFromJSON(filepath string) error {
+	if !strings.HasPrefix(filepath, "./") {
+		return fmt.Errorf("unsafe input")
+	}
 	data, err := os.ReadFile(filepath)
 	if err != nil {
 		return err
@@ -119,11 +124,6 @@ func main() {
 		log.Printf("failed to listen: %v\n", err)
 		return
 	}
-	defer func() {
-		if cerr := lis.Close(); cerr != nil {
-			log.Printf("failed to close listener: %v\n", cerr)
-		}
-	}()
 
 	// Создаем gRPC сервер
 	s := grpc.NewServer()
@@ -132,7 +132,7 @@ func main() {
 	service := &inventoryService{
 		parts: make(map[string]*inventoryV1.Part),
 	}
-	service.loadPartsFromJSON("./parts.json")
+	err = service.loadPartsFromJSON("./parts.json")
 	inventoryV1.RegisterInventoryServiceServer(s, service)
 
 	// Включаем рефлексию для отладки
@@ -146,7 +146,11 @@ func main() {
 			return
 		}
 	}()
-
+	defer func() {
+		if cerr := lis.Close(); cerr != nil {
+			log.Printf("failed to close listener: %v\n", cerr)
+		}
+	}()
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

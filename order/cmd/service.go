@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/google/uuid"
+
 	orderV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/openapi/order/v1"
 	inventoryV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/inventory/v1"
 	paymentV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/payment/v1"
-	"github.com/google/uuid"
 )
 
 type orderService struct {
@@ -26,9 +27,8 @@ func NewOrderService(ic inventoryV1.InventoryServiceClient, pc paymentV1.Payment
 	}
 }
 
-func (s *orderService) CreateOrder(req *orderV1.CreateOrderRequest) (orderV1.CreateOrderRes, error) {
-
-	resp, err := s.inventoryClient.ListParts(context.TODO(), &inventoryV1.ListPartsRequest{
+func (s *orderService) CreateOrder(ctx context.Context, req *orderV1.CreateOrderRequest) (orderV1.CreateOrderRes, error) {
+	resp, err := s.inventoryClient.ListParts(ctx, &inventoryV1.ListPartsRequest{
 		Filter: &inventoryV1.PartsFilter{Uuids: req.GetPartUuids()},
 	})
 	if err != nil {
@@ -61,7 +61,7 @@ func (s *orderService) CreateOrder(req *orderV1.CreateOrderRequest) (orderV1.Cre
 	}, nil
 }
 
-func (s *orderService) PayOrder(req *orderV1.PayOrderRequest, orderUUID string) (orderV1.PayOrderRes, error) {
+func (s *orderService) PayOrder(ctx context.Context, req *orderV1.PayOrderRequest, orderUUID string) (orderV1.PayOrderRes, error) {
 	s.mu.RLock()
 	order, ok := s.orders[orderUUID]
 	s.mu.RUnlock()
@@ -97,7 +97,7 @@ func (s *orderService) PayOrder(req *orderV1.PayOrderRequest, orderUUID string) 
 		UserUuid:      order.UserUUID,
 		PaymentMethod: grpcPaymentMethod,
 	}
-	payResp, err := s.paymentClient.PayOrder(context.TODO(), paymentReq)
+	payResp, err := s.paymentClient.PayOrder(ctx, paymentReq)
 	if err != nil {
 		return &orderV1.BadRequestError{Error: fmt.Sprintf("payment error: %v", err)}, nil
 	}
@@ -111,7 +111,7 @@ func (s *orderService) PayOrder(req *orderV1.PayOrderRequest, orderUUID string) 
 	return &orderV1.PayOrderResponse{TransactionUUID: payResp.GetTransactionUuid()}, nil
 }
 
-func (s *orderService) GetOrderByUUID(uuid string) (orderV1.GetOrderByUUIDRes, error) {
+func (s *orderService) GetOrderByUUID(_ context.Context, uuid string) (orderV1.GetOrderByUUIDRes, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	order, ok := s.orders[uuid]
@@ -121,7 +121,7 @@ func (s *orderService) GetOrderByUUID(uuid string) (orderV1.GetOrderByUUIDRes, e
 	return order, nil
 }
 
-func (s *orderService) CancelOrderByUUID(uuid string) (orderV1.CancelOrderRes, error) {
+func (s *orderService) CancelOrderByUUID(_ context.Context, uuid string) (orderV1.CancelOrderRes, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	order, ok := s.orders[uuid]

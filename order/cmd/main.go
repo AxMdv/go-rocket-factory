@@ -38,8 +38,6 @@ const (
 )
 
 func main() {
-	ctx := context.Background()
-
 	inventoryConn, err := grpc.NewClient(
 		inventoryServiceAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -48,11 +46,6 @@ func main() {
 		log.Printf("failed to connect to inventory: %v\n", err)
 		return
 	}
-	defer func() {
-		if cerr := inventoryConn.Close(); cerr != nil {
-			log.Printf("failed to close connect to inventory: %v", cerr)
-		}
-	}()
 
 	paymentConn, err := grpc.NewClient(
 		paymentServiceAddr,
@@ -62,11 +55,6 @@ func main() {
 		log.Printf("failed to connect to payment: %v\n", err)
 		return
 	}
-	defer func() {
-		if cerr := paymentConn.Close(); cerr != nil {
-			log.Printf("failed to close connect to payment: %v", cerr)
-		}
-	}()
 
 	// Создаем gRPC клиенты
 	inventoryClient := inventoryV1.NewInventoryServiceClient(inventoryConn)
@@ -79,6 +67,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer func() {
+		if cerr := paymentConn.Close(); cerr != nil {
+			log.Printf("failed to close connect to payment: %v", cerr)
+		}
+	}()
+	defer func() {
+		if cerr := inventoryConn.Close(); cerr != nil {
+			log.Printf("failed to close connect to inventory: %v", cerr)
+		}
+	}()
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
