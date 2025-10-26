@@ -75,9 +75,6 @@ func (s *orderService) PayOrder(ctx context.Context, req *orderV1.PayOrderReques
 		return &orderV1.ConflictError{Error: "cannot pay cancelled order"}, nil
 	}
 	payMethod := req.GetPaymentMethod()
-	if payMethod == orderV1.PaymentMethodUNKNOWN {
-		return &orderV1.BadRequestError{Error: "unknown payment method"}, nil
-	}
 
 	var grpcPaymentMethod paymentV1.PaymentMethod
 	switch payMethod {
