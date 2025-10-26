@@ -3,16 +3,17 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
+	"github.com/brianvoe/gofakeit/v6"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -30,62 +31,100 @@ type inventoryService struct {
 	parts map[string]*inventoryV1.Part
 }
 
-// Структура для десериализации JSON (примерно совпадает с protobuf, но с enum в строковом виде)
-type partJSON struct {
-	Uuid          string                        `json:"uuid"`
-	Name          string                        `json:"name"`
-	Description   string                        `json:"description"`
-	Price         float64                       `json:"price"`
-	StockQuantity int64                         `json:"stock_quantity"`
-	Category      string                        `json:"category"`
-	Dimensions    *inventoryV1.Dimensions       `json:"dimensions"`
-	Manufacturer  *inventoryV1.Manufacturer     `json:"manufacturer"`
-	Tags          []string                      `json:"tags"`
-	Metadata      map[string]*inventoryV1.Value `json:"metadata"`
+func (s *inventoryService) generateParts(count int) {
+	// Используем общий генератор создающий и возвращающий карту деталей,
+	// затем просто присваиваем её в s.parts.
+	s.parts = createParts(count)
 }
 
-// Функция загрузки деталей в map[string]*Part
-func (s *inventoryService) loadPartsFromJSON(filepath string) error {
-	if !strings.HasPrefix(filepath, "./") {
-		return fmt.Errorf("unsafe input")
-	}
-	data, err := os.ReadFile(filepath)
-	if err != nil {
-		return err
-	}
-
-	var partsFromJSON []partJSON
-	if err := json.Unmarshal(data, &partsFromJSON); err != nil {
-		return err
-	}
+// createParts генерирует и возвращает map[string]*inventoryV1.Part с помощью gofakeit.
+func createParts(count int) map[string]*inventoryV1.Part {
+	// Инициализация генератора
+	gofakeit.Seed(time.Now().UnixNano())
 
 	now := timestamppb.New(time.Now())
-	s.parts = make(map[string]*inventoryV1.Part, len(partsFromJSON))
+	parts := make(map[string]*inventoryV1.Part, count)
 
-	for _, p := range partsFromJSON {
-		// Конвертируем строку category в enum
-		catValue, ok := inventoryV1.Category_value[p.Category]
-		if !ok {
-			catValue = int32(inventoryV1.Category_CATEGORY_UNKNOWN)
+	categories := []inventoryV1.Category{
+		inventoryV1.Category_CATEGORY_ENGINE,
+		inventoryV1.Category_CATEGORY_FUEL,
+		inventoryV1.Category_CATEGORY_PORTHOLE,
+		inventoryV1.Category_CATEGORY_WING,
+	}
+
+	// Вспомогательные генераторы
+	genDimensions := func() *inventoryV1.Dimensions {
+		return &inventoryV1.Dimensions{
+			Length: gofakeit.Float64Range(0.1, 50.0), // метры
+			Width:  gofakeit.Float64Range(0.1, 10.0),
+			Height: gofakeit.Float64Range(0.1, 10.0),
+			Weight: gofakeit.Float64Range(0.5, 5000.0), // кг
 		}
+	}
+	genManufacturer := func() *inventoryV1.Manufacturer {
+		return &inventoryV1.Manufacturer{
+			Name:    gofakeit.Company(),
+			Country: gofakeit.Country(),
+			Website: gofakeit.URL(),
+		}
+	}
+	genTags := func() []string {
+		base := []string{"space", "rocket", "module", "spare", "core", "nano", "mkII", "mkIII"}
+		n := gofakeit.Number(1, 4)
+		out := make([]string, 0, n)
+		for i := 0; i < n; i++ {
+			out = append(out, base[rand.Intn(len(base))])
+		}
+		return out
+	}
+	genMetadata := func() map[string]*inventoryV1.Value {
+		// Пример смешанного metadata: string, number, bool
+		return map[string]*inventoryV1.Value{
+			"batch": {
+				Kind: &inventoryV1.Value_StringValue{
+					StringValue: gofakeit.UUID(),
+				},
+			},
+			"lifetime_hours": {
+				Kind: &inventoryV1.Value_DoubleValue{
+					DoubleValue: gofakeit.Float64Range(100, 100000),
+				},
+			},
+			"refurbished": {
+				Kind: &inventoryV1.Value_BoolValue{
+					BoolValue: gofakeit.Bool(),
+				},
+			},
+		}
+	}
 
-		s.parts[p.Uuid] = &inventoryV1.Part{
-			Uuid:          p.Uuid,
-			Name:          p.Name,
-			Description:   p.Description,
-			Price:         p.Price,
-			StockQuantity: p.StockQuantity,
-			Category:      inventoryV1.Category(catValue),
-			Dimensions:    p.Dimensions,
-			Manufacturer:  p.Manufacturer,
-			Tags:          p.Tags,
-			Metadata:      p.Metadata,
+	for i := 0; i < count; i++ {
+		id := uuid.New().String()
+		name := gofakeit.Company() + " Part"
+		desc := gofakeit.Sentence(8)
+
+		cat := categories[gofakeit.Number(0, len(categories)-1)]
+		price := gofakeit.Price(100.0, 500000.0)
+		stock := int64(gofakeit.Number(0, 500))
+
+		part := &inventoryV1.Part{
+			Uuid:          id,
+			Name:          name,
+			Description:   desc,
+			Price:         price,
+			StockQuantity: stock,
+			Category:      cat,
+			Dimensions:    genDimensions(),
+			Manufacturer:  genManufacturer(),
+			Tags:          genTags(),
+			Metadata:      genMetadata(),
 			CreatedAt:     now,
 			UpdatedAt:     now,
 		}
+		parts[id] = part
 	}
 
-	return nil
+	return parts
 }
 
 // GetPart возвращает информацию о детали по её идентификатору.
@@ -132,7 +171,8 @@ func main() {
 	service := &inventoryService{
 		parts: make(map[string]*inventoryV1.Part),
 	}
-	err = service.loadPartsFromJSON("./parts.json")
+	service.generateParts(15)
+
 	inventoryV1.RegisterInventoryServiceServer(s, service)
 
 	// Включаем рефлексию для отладки
