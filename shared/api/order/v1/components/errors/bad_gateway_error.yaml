@@ -1,0 +1,8 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Сообщение об ошибке "плохой шлюз"
+    example: "Bad gateway"
+required:
+  - error

@@ -1,0 +1,6 @@
+type: object
+properties:
+  order:
+    $ref: './order_dto.yaml'
+required:
+  - order

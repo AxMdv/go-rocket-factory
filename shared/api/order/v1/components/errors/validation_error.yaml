@@ -1,0 +1,8 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Сообщение об ошибке валидации данных
+    example: "Validation failed for field 'user_uuid'"
+required:
+  - error
