@@ -1,6 +1,8 @@
+// nolint:gosec
 package part
 
 import (
+	"log"
 	"math/rand"
 	"time"
 
@@ -11,7 +13,10 @@ import (
 )
 
 func createRepoParts(count int) map[string]repoModel.Part {
-	gofakeit.Seed(time.Now().UnixNano())
+	err := gofakeit.Seed(time.Now().UnixNano())
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	parts := make(map[string]repoModel.Part, count)
 

@@ -6,15 +6,14 @@ go 1.24.8
 
 require (
 	github.com/AxMdv/go-rocket-factory/shared v0.0.0-00010101000000-000000000000
-	github.com/brianvoe/gofakeit/v6 v6.28.0
+	github.com/brianvoe/gofakeit/v7 v7.8.1
 	github.com/google/uuid v1.6.0
+	github.com/samber/lo v1.52.0
 	google.golang.org/grpc v1.76.0
 	google.golang.org/protobuf v1.36.10
 )
 
 require (
-	github.com/brianvoe/gofakeit/v7 v7.8.1 // indirect
-	github.com/samber/lo v1.52.0 // indirect
 	golang.org/x/net v0.44.0 // indirect
 	golang.org/x/sys v0.36.0 // indirect
 	golang.org/x/text v0.29.0 // indirect

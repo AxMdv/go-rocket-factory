@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/AxMdv/go-rocket-factory/inventory/internal/converter"
 	"github.com/AxMdv/go-rocket-factory/inventory/internal/model"
 	inventoryV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/inventory/v1"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // GetPart возвращает информацию о детали по её идентификатору.
