@@ -3,10 +3,11 @@ package v1
 import (
 	"context"
 
-	"github.com/AxMdv/go-rocket-factory/payment/internal/converter"
-	paymentV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/payment/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/AxMdv/go-rocket-factory/payment/internal/converter"
+	paymentV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/payment/v1"
 )
 
 func (a *api) PayOrder(ctx context.Context, req *paymentV1.PayOrderRequest) (*paymentV1.PayOrderResponse, error) {

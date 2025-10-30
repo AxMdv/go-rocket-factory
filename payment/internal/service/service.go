@@ -7,5 +7,5 @@ import (
 )
 
 type PaymentService interface {
-	PayUserOrder(ctx context.Context, userUUID string, orderUUID string, paymentMethod model.PaymentMethod) (transactionUUID string, err error)
+	PayUserOrder(ctx context.Context, userUUID, orderUUID string, paymentMethod model.PaymentMethod) (transactionUUID string, err error)
 }
