@@ -19,6 +19,9 @@ func (a *api) GetPart(ctx context.Context, req *inventoryV1.GetPartRequest) (*in
 		if errors.Is(err, model.ErrPartNotFound) {
 			return nil, status.Errorf(codes.NotFound, "part with UUID %s not found", req.GetUuid())
 		}
+		if errors.Is(err, model.ErrInvalidUUID) {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid part UUID %s", req.GetUuid())
+		}
 		return nil, status.Errorf(codes.Internal, "internal error %s", err)
 
 	}
