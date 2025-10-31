@@ -21,7 +21,7 @@ func RepoOrderToModel(r repoModel.Order) model.Order {
 	return model.Order{
 		OrderUUID:       r.OrderUUID,
 		UserUUID:        r.UserUUID,
-		PartUUIDs:       append([]string(nil), r.PartUUIDs...),
+		PartUUIDs:       r.PartUUIDs,
 		TotalPrice:      r.TotalPrice,
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
@@ -53,7 +53,7 @@ func ModelOrderToRepo(m model.Order) repoModel.Order {
 	return repoModel.Order{
 		OrderUUID:       m.OrderUUID,
 		UserUUID:        m.UserUUID,
-		PartUUIDs:       append([]string(nil), m.PartUUIDs...),
+		PartUUIDs:       m.PartUUIDs,
 		TotalPrice:      m.TotalPrice,
 		TransactionUUID: tx,
 		PaymentMethod:   pm,

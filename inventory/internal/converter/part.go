@@ -153,7 +153,7 @@ func PartToModel(p *inventoryV1.Part) *model.Part {
 		Category:      CategoryToModel(p.GetCategory()),
 		Dimensions:    DimensionsToModel(p.GetDimensions()),
 		Manufacturer:  ManufacturerToModel(p.GetManufacturer()),
-		Tags:          append([]string(nil), p.GetTags()...),
+		Tags:          p.GetTags(),
 		Metadata:      md,
 		CreatedAt:     timeToModel(p.GetCreatedAt()),
 		UpdatedAt:     timeToModel(p.GetUpdatedAt()),
@@ -179,7 +179,7 @@ func PartToProto(m *model.Part) *inventoryV1.Part {
 		Category:      CategoryToProto(m.Category),
 		Dimensions:    DimensionsToProto(m.Dimensions),
 		Manufacturer:  ManufacturerToProto(m.Manufacturer),
-		Tags:          append([]string(nil), m.Tags...),
+		Tags:          m.Tags,
 		Metadata:      md,
 		CreatedAt:     timeToProto(m.CreatedAt),
 		UpdatedAt:     timeToProto(m.UpdatedAt),
@@ -201,11 +201,11 @@ func PartsFilterToModel(f *inventoryV1.PartsFilter) model.PartsFilter {
 	}
 
 	return model.PartsFilter{
-		Uuids:                 append([]string(nil), f.GetUuids()...),
-		Names:                 append([]string(nil), f.GetNames()...),
+		Uuids:                 f.GetUuids(),
+		Names:                 f.GetNames(),
 		Categories:            cats,
-		ManufacturerCountries: append([]string(nil), f.GetManufacturerCountries()...),
-		Tags:                  append([]string(nil), f.GetTags()...),
+		ManufacturerCountries: f.GetManufacturerCountries(),
+		Tags:                  f.GetTags(),
 	}
 }
 

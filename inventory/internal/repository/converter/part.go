@@ -94,7 +94,7 @@ func PartModelToRepo(p *model.Part) *repoModel.Part {
 		Category:      categoryModelToRepo(p.Category),
 		Dimensions:    dimensionsModelToRepo(p.Dimensions),
 		Manufacturer:  manufacturerModelToRepo(p.Manufacturer),
-		Tags:          append([]string(nil), p.Tags...),
+		Tags:          p.Tags,
 		Metadata:      p.Metadata,
 		CreatedAt:     p.CreatedAt,
 		UpdatedAt:     p.UpdatedAt,
@@ -114,7 +114,7 @@ func PartRepoToModel(p *repoModel.Part) *model.Part {
 		Category:      categoryRepoToModel(p.Category),
 		Dimensions:    dimensionsRepoToModel(p.Dimensions),
 		Manufacturer:  manufacturerRepoToModel(p.Manufacturer),
-		Tags:          append([]string(nil), p.Tags...),
+		Tags:          p.Tags,
 		Metadata:      p.Metadata,
 		CreatedAt:     p.CreatedAt,
 		UpdatedAt:     p.UpdatedAt,
@@ -154,11 +154,11 @@ func PartsFilterModelToRepo(f *model.PartsFilter) *repoModel.PartsFilter {
 		cats = append(cats, categoryModelToRepo(c))
 	}
 	return &repoModel.PartsFilter{
-		Uuids:                 append([]string(nil), f.Uuids...),
-		Names:                 append([]string(nil), f.Names...),
+		Uuids:                 f.Uuids,
+		Names:                 f.Names,
 		Categories:            cats,
-		ManufacturerCountries: append([]string(nil), f.ManufacturerCountries...),
-		Tags:                  append([]string(nil), f.Tags...),
+		ManufacturerCountries: f.ManufacturerCountries,
+		Tags:                  f.Tags,
 	}
 }
 
@@ -171,10 +171,10 @@ func PartsFilterRepoToModel(f *repoModel.PartsFilter) *model.PartsFilter {
 		cats = append(cats, categoryRepoToModel(c))
 	}
 	return &model.PartsFilter{
-		Uuids:                 append([]string(nil), f.Uuids...),
-		Names:                 append([]string(nil), f.Names...),
+		Uuids:                 f.Uuids,
+		Names:                 f.Names,
 		Categories:            cats,
-		ManufacturerCountries: append([]string(nil), f.ManufacturerCountries...),
-		Tags:                  append([]string(nil), f.Tags...),
+		ManufacturerCountries: f.ManufacturerCountries,
+		Tags:                  f.Tags,
 	}
 }

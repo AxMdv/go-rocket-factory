@@ -23,7 +23,7 @@ func OrderDtoToModel(d orderV1.OrderDto) model.Order {
 	return model.Order{
 		OrderUUID:       d.GetOrderUUID(),
 		UserUUID:        d.GetUserUUID(),
-		PartUUIDs:       append([]string(nil), d.GetPartUuids()...),
+		PartUUIDs:       d.GetPartUuids(),
 		TotalPrice:      d.GetTotalPrice(),
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
@@ -46,7 +46,7 @@ func OrderModelToDto(m model.Order) orderV1.OrderDto {
 	return orderV1.OrderDto{
 		OrderUUID:       m.OrderUUID,
 		UserUUID:        m.UserUUID,
-		PartUuids:       append([]string(nil), m.PartUUIDs...),
+		PartUuids:       m.PartUUIDs,
 		TotalPrice:      m.TotalPrice,
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
