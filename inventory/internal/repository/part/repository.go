@@ -12,7 +12,9 @@ type repository struct {
 }
 
 func NewRepository() *repository {
-	repo := &repository{}
+	repo := &repository{
+		parts: make(map[string]repoModel.Part, 20),
+	}
 	repo.parts = createRepoParts(20)
 	return repo
 }
