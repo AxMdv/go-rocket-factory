@@ -16,7 +16,7 @@ func (s *service) Cancel(ctx context.Context, orderUUID string) error {
 	}
 	switch order.Status {
 	case model.OrderStatusPAID:
-		return model.ErrConflict
+		return model.ErrOrderStatusConflict
 	case model.OrderStatusCANCELLED:
 		return nil
 	case model.OrderStatusPENDINGPAYMENT:

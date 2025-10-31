@@ -20,7 +20,7 @@ func (a *api) PayOrder(ctx context.Context, req *orderV1.PayOrderRequest, params
 		if errors.Is(err, model.ErrOrderNotFound) {
 			return &orderV1.NotFoundError{Error: "order not found"}, nil
 		}
-		if errors.Is(err, model.ErrConflict) {
+		if errors.Is(err, model.ErrOrderStatusConflict) {
 			return &orderV1.ConflictError{Error: "order already paid or cancelled"}, nil
 		}
 		return &orderV1.InternalServerError{Error: err.Error()}, nil

@@ -3,8 +3,9 @@ package part
 import (
 	"context"
 
-	"github.com/AxMdv/go-rocket-factory/inventory/internal/model"
 	"github.com/google/uuid"
+
+	"github.com/AxMdv/go-rocket-factory/inventory/internal/model"
 )
 
 func (s *service) Get(ctx context.Context, partUUID string) (model.Part, error) {

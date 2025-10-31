@@ -14,7 +14,7 @@ func (a *api) CancelOrder(ctx context.Context, params orderV1.CancelOrderParams)
 		if errors.Is(err, model.ErrOrderNotFound) {
 			return &orderV1.NotFoundError{Error: "order not found"}, nil
 		}
-		if errors.Is(err, model.ErrConflict) {
+		if errors.Is(err, model.ErrOrderStatusConflict) {
 			return &orderV1.ConflictError{Error: "cannot cancel paid order"}, nil
 		}
 		return &orderV1.InternalServerError{Error: err.Error()}, nil

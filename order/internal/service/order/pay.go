@@ -14,8 +14,8 @@ func (s *service) PayOrder(ctx context.Context, orderUUID string, method model.P
 	if err != nil {
 		return "", err
 	}
-	if order.Status == model.OrderStatusPAID || order.Status == model.OrderStatusCANCELLED {
-		return "", model.ErrConflict
+	if order.Status != model.OrderStatusPENDINGPAYMENT {
+		return "", model.ErrOrderStatusConflict
 	}
 
 	transactionUUID, err := s.paymentClient.PayOrder(ctx, order.OrderUUID, order.UserUUID, method)
