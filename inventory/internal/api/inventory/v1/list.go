@@ -11,7 +11,7 @@ import (
 )
 
 func (a *api) ListParts(ctx context.Context, req *inventoryV1.ListPartsRequest) (*inventoryV1.ListPartsResponse, error) {
-	parts, err := a.partService.ListPartsByFilter(ctx, converter.PartsFilterToModel(req.GetFilter()))
+	parts, err := a.partService.List(ctx, converter.PartsFilterToModel(req.GetFilter()))
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "internal error %s", err)
 	}

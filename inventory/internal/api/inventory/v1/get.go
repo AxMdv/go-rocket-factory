@@ -14,7 +14,7 @@ import (
 
 // GetPart возвращает информацию о детали по её идентификатору.
 func (a *api) GetPart(ctx context.Context, req *inventoryV1.GetPartRequest) (*inventoryV1.GetPartResponse, error) {
-	part, err := a.partService.GetPartByUUID(ctx, req.GetUuid())
+	part, err := a.partService.Get(ctx, req.GetUuid())
 	if err != nil {
 		if errors.Is(err, model.ErrPartNotFound) {
 			return nil, status.Errorf(codes.NotFound, "part with UUID %s not found", req.GetUuid())

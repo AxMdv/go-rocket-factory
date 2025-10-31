@@ -10,7 +10,7 @@ import (
 )
 
 func (s *service) PayOrder(ctx context.Context, orderUUID string, method model.PaymentMethod) (string, error) {
-	order, err := s.orderRepository.GetOrderByUUID(ctx, orderUUID)
+	order, err := s.orderRepository.Get(ctx, orderUUID)
 	if err != nil {
 		return "", err
 	}

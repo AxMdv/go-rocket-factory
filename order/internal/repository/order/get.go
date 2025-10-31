@@ -9,7 +9,7 @@ import (
 	repoConverter "github.com/AxMdv/go-rocket-factory/order/internal/repository/converter"
 )
 
-func (r *repository) GetOrderByUUID(_ context.Context, orderUUID string) (*model.Order, error) {
+func (r *repository) Get(_ context.Context, orderUUID string) (*model.Order, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	repoOrder, ok := r.orders[orderUUID]

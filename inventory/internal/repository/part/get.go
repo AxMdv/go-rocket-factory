@@ -7,13 +7,13 @@ import (
 	repoConverter "github.com/AxMdv/go-rocket-factory/inventory/internal/repository/converter"
 )
 
-func (r *repository) GetPartByUUID(ctx context.Context, uuid string) (model.Part, error) {
+func (r *repository) Get(ctx context.Context, uuid string) (model.Part, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
 	repoPart, ok := r.parts[uuid]
 	if !ok {
-		return model.Part{}, nil
+		return model.Part{}, model.ErrPartNotFound
 	}
 
 	return *repoConverter.PartRepoToModel(&repoPart), nil

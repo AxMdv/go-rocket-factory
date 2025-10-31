@@ -25,7 +25,7 @@ func (s *service) CreateOrder(ctx context.Context, userUUID string, partUUIDs []
 	order := model.Order{
 		OrderUUID:  uuid.New().String(),
 		UserUUID:   userUUID,
-		PartUUIDs:  append([]string(nil), partUUIDs...),
+		PartUUIDs:  partUUIDs,
 		TotalPrice: totalPrice,
 		Status:     model.OrderStatusPENDINGPAYMENT,
 	}

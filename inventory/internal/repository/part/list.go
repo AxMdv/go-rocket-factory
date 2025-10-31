@@ -8,7 +8,7 @@ import (
 	repoModel "github.com/AxMdv/go-rocket-factory/inventory/internal/repository/model"
 )
 
-func (r *repository) ListPartsByFilter(ctx context.Context, filter model.PartsFilter) ([]model.Part, error) {
+func (r *repository) List(ctx context.Context, filter model.PartsFilter) ([]model.Part, error) {
 	filteredParts := filterParts(r.parts, repoConverter.PartsFilterModelToRepo(&filter))
 
 	return repoConverter.PartsRepoToModel(filteredParts), nil

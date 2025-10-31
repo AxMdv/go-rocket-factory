@@ -9,8 +9,8 @@ import (
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
 
-func (s *service) CancelOrderByUUID(ctx context.Context, orderUUID string) error {
-	order, err := s.orderRepository.GetOrderByUUID(ctx, orderUUID)
+func (s *service) Cancel(ctx context.Context, orderUUID string) error {
+	order, err := s.orderRepository.Get(ctx, orderUUID)
 	if err != nil {
 		return err
 	}
