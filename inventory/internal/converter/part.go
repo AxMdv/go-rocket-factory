@@ -3,7 +3,6 @@ package converter
 import (
 	"time"
 
-	"github.com/samber/lo"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/AxMdv/go-rocket-factory/inventory/internal/model"
@@ -86,37 +85,34 @@ func ManufacturerToProto(m *model.Manufacturer) *inventoryV1.Manufacturer {
 	}
 }
 
-func ValueToModel(v *inventoryV1.Value) model.Value {
-	var mv model.Value
+// returns string/int64/float64/bool
+func ValueToModel(v *inventoryV1.Value) interface{} {
 	switch k := v.GetKind().(type) {
 	case *inventoryV1.Value_StringValue:
-		mv.String = lo.ToPtr(k.StringValue)
+		return k.StringValue
 	case *inventoryV1.Value_Int64Value:
-		x := k.Int64Value
-		mv.Int64 = &x
+		return k.Int64Value
 	case *inventoryV1.Value_DoubleValue:
-		x := k.DoubleValue
-		mv.Double = &x
+		return k.DoubleValue
 	case *inventoryV1.Value_BoolValue:
-		x := k.BoolValue
-		mv.Bool = &x
+		return k.BoolValue
 	}
-	return mv
+	return ""
 }
 
-func ValueToProto(v model.Value) *inventoryV1.Value {
+func ValueToProto(v any) *inventoryV1.Value {
 	out := &inventoryV1.Value{}
-	switch {
-	case v.String != nil:
-		out.Kind = &inventoryV1.Value_StringValue{StringValue: *v.String}
-	case v.Int64 != nil:
-		out.Kind = &inventoryV1.Value_Int64Value{Int64Value: *v.Int64}
-	case v.Double != nil:
-		out.Kind = &inventoryV1.Value_DoubleValue{DoubleValue: *v.Double}
-	case v.Bool != nil:
-		out.Kind = &inventoryV1.Value_BoolValue{BoolValue: *v.Bool}
+	switch x := v.(type) {
+	case string:
+		out.Kind = &inventoryV1.Value_StringValue{StringValue: x}
+	case int64:
+		out.Kind = &inventoryV1.Value_Int64Value{Int64Value: x}
+	case float64:
+		out.Kind = &inventoryV1.Value_DoubleValue{DoubleValue: x}
+	case bool:
+		out.Kind = &inventoryV1.Value_BoolValue{BoolValue: x}
 	default:
-		// пустое значение — оставляем Kind nil
+		// оставляем Kind == nil
 	}
 	return out
 }
@@ -140,7 +136,7 @@ func PartToModel(p *inventoryV1.Part) *model.Part {
 		return nil
 	}
 
-	md := make(map[string]model.Value, len(p.GetMetadata()))
+	md := make(map[string]interface{}, len(p.GetMetadata()))
 	for k, v := range p.GetMetadata() {
 		if v == nil {
 			continue

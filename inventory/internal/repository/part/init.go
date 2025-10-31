@@ -54,15 +54,15 @@ func createRepoParts(count int) map[string]repoModel.Part {
 		return out
 	}
 
-	genMetadata := func() map[string]repoModel.Value {
+	genMetadata := func() map[string]interface{} {
 		batch := gofakeit.UUID()
 		lifetime := gofakeit.Float64Range(100, 100000)
 		refurb := gofakeit.Bool()
 
-		return map[string]repoModel.Value{
-			"batch":          {String: &batch},
-			"lifetime_hours": {Double: &lifetime},
-			"refurbished":    {Bool: &refurb},
+		return map[string]interface{}{
+			"batch":          batch,
+			"lifetime_hours": lifetime,
+			"refurbished":    refurb,
 		}
 	}
 

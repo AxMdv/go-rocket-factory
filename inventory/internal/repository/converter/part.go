@@ -1,8 +1,6 @@
 package converter
 
 import (
-	"github.com/samber/lo"
-
 	"github.com/AxMdv/go-rocket-factory/inventory/internal/model"
 	repoModel "github.com/AxMdv/go-rocket-factory/inventory/internal/repository/model"
 )
@@ -61,36 +59,6 @@ func dimensionsRepoToModel(d *repoModel.Dimensions) *model.Dimensions {
 	}
 }
 
-func valueModelToRepo(v model.Value) repoModel.Value {
-	var out repoModel.Value
-	switch {
-	case v.String != nil:
-		out.String = lo.ToPtr(*v.String)
-	case v.Int64 != nil:
-		out.Int64 = lo.ToPtr(*v.Int64)
-	case v.Double != nil:
-		out.Double = lo.ToPtr(*v.Double)
-	case v.Bool != nil:
-		out.Bool = lo.ToPtr(*v.Bool)
-	}
-	return out
-}
-
-func valueRepoToModel(v repoModel.Value) model.Value {
-	var out model.Value
-	switch {
-	case v.String != nil:
-		out.String = lo.ToPtr(*v.String)
-	case v.Int64 != nil:
-		out.Int64 = lo.ToPtr(*v.Int64)
-	case v.Double != nil:
-		out.Double = lo.ToPtr(*v.Double)
-	case v.Bool != nil:
-		out.Bool = lo.ToPtr(*v.Bool)
-	}
-	return out
-}
-
 func manufacturerModelToRepo(m *model.Manufacturer) *repoModel.Manufacturer {
 	if m == nil {
 		return nil
@@ -117,10 +85,6 @@ func PartModelToRepo(p *model.Part) *repoModel.Part {
 	if p == nil {
 		return nil
 	}
-	meta := make(map[string]repoModel.Value, len(p.Metadata))
-	for k, v := range p.Metadata {
-		meta[k] = valueModelToRepo(v)
-	}
 	return &repoModel.Part{
 		UUID:          p.UUID,
 		Name:          p.Name,
@@ -131,7 +95,7 @@ func PartModelToRepo(p *model.Part) *repoModel.Part {
 		Dimensions:    dimensionsModelToRepo(p.Dimensions),
 		Manufacturer:  manufacturerModelToRepo(p.Manufacturer),
 		Tags:          append([]string(nil), p.Tags...),
-		Metadata:      meta,
+		Metadata:      p.Metadata,
 		CreatedAt:     p.CreatedAt,
 		UpdatedAt:     p.UpdatedAt,
 	}
@@ -140,10 +104,6 @@ func PartModelToRepo(p *model.Part) *repoModel.Part {
 func PartRepoToModel(p *repoModel.Part) *model.Part {
 	if p == nil {
 		return nil
-	}
-	meta := make(map[string]model.Value, len(p.Metadata))
-	for k, v := range p.Metadata {
-		meta[k] = valueRepoToModel(v)
 	}
 	return &model.Part{
 		UUID:          p.UUID,
@@ -155,7 +115,7 @@ func PartRepoToModel(p *repoModel.Part) *model.Part {
 		Dimensions:    dimensionsRepoToModel(p.Dimensions),
 		Manufacturer:  manufacturerRepoToModel(p.Manufacturer),
 		Tags:          append([]string(nil), p.Tags...),
-		Metadata:      meta,
+		Metadata:      p.Metadata,
 		CreatedAt:     p.CreatedAt,
 		UpdatedAt:     p.UpdatedAt,
 	}

@@ -26,13 +26,13 @@ type Manufacturer struct {
 	Website string
 }
 
-// Value — oneof-представление для metadata.
-type Value struct {
-	String *string
-	Int64  *int64
-	Double *float64
-	Bool   *bool
-}
+// // Value — oneof-представление для metadata.
+// type Value struct {
+// 	String *string
+// 	Int64  *int64
+// 	Double *float64
+// 	Bool   *bool
+// }
 
 type Part struct {
 	UUID          string
@@ -44,7 +44,7 @@ type Part struct {
 	Dimensions    *Dimensions
 	Manufacturer  *Manufacturer
 	Tags          []string
-	Metadata      map[string]Value
+	Metadata      map[string]interface{} // can be one of (string, int64, float64, bool)
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }

@@ -44,7 +44,7 @@ type Part struct {
 	Dimensions    *Dimensions
 	Manufacturer  *Manufacturer
 	Tags          []string
-	Metadata      map[string]Value
+	Metadata      map[string]interface{}
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
