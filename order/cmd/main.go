@@ -16,6 +16,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	orderV1API "github.com/AxMdv/go-rocket-factory/order/internal/api/order/v1"
+	inventoryClientV1 "github.com/AxMdv/go-rocket-factory/order/internal/client/grpc/inventory/v1"
+	paymentClientV1 "github.com/AxMdv/go-rocket-factory/order/internal/client/grpc/payment/v1"
+	orderRepository "github.com/AxMdv/go-rocket-factory/order/internal/repository/order"
+	orderService "github.com/AxMdv/go-rocket-factory/order/internal/service/order"
 	orderV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/openapi/order/v1"
 	inventoryV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/inventory/v1"
 	paymentV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/proto/payment/v1"
@@ -28,13 +33,6 @@ const (
 	// Таймауты для HTTP-сервера
 	readHeaderTimeout = 5 * time.Second
 	shutdownTimeout   = 10 * time.Second
-)
-
-// Константы статусов заказа
-const (
-	StatusPendingPayment = "PENDING_PAYMENT"
-	StatusPaid           = "PAID"
-	StatusCancelled      = "CANCELLED"
 )
 
 func main() {
@@ -57,13 +55,18 @@ func main() {
 	}
 
 	// Создаем gRPC клиенты
-	inventoryClient := inventoryV1.NewInventoryServiceClient(inventoryConn)
-	paymentClient := paymentV1.NewPaymentServiceClient(paymentConn)
+	ic := inventoryV1.NewInventoryServiceClient(inventoryConn)
+	pc := paymentV1.NewPaymentServiceClient(paymentConn)
 
-	orderService := NewOrderService(inventoryClient, paymentClient)
+	// Создаем реализацию gRPC клиентов (сущности для сервисного слоя)
+	invClient := inventoryClientV1.NewInventoryClient(ic)
+	payClient := paymentClientV1.NewPaymentClient(pc)
 
-	handler := NewOrderHandler(orderService)
-	orderServer, err := orderV1.NewServer(handler)
+	repo := orderRepository.NewRepository()
+	orderSvc := orderService.NewOrderService(repo, invClient, payClient)
+
+	api := orderV1API.NewAPI(orderSvc)
+	orderServer, err := orderV1.NewServer(api)
 	if err != nil {
 		log.Fatal(err)
 	}
