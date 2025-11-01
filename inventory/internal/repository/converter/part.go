@@ -81,11 +81,8 @@ func manufacturerRepoToModel(m *repoModel.Manufacturer) *model.Manufacturer {
 	}
 }
 
-func PartModelToRepo(p *model.Part) *repoModel.Part {
-	if p == nil {
-		return nil
-	}
-	return &repoModel.Part{
+func PartModelToRepo(p model.Part) repoModel.Part {
+	return repoModel.Part{
 		UUID:          p.UUID,
 		Name:          p.Name,
 		Description:   p.Description,
@@ -101,11 +98,8 @@ func PartModelToRepo(p *model.Part) *repoModel.Part {
 	}
 }
 
-func PartRepoToModel(p *repoModel.Part) *model.Part {
-	if p == nil {
-		return nil
-	}
-	return &model.Part{
+func PartRepoToModel(p repoModel.Part) model.Part {
+	return model.Part{
 		UUID:          p.UUID,
 		Name:          p.Name,
 		Description:   p.Description,
@@ -121,26 +115,24 @@ func PartRepoToModel(p *repoModel.Part) *model.Part {
 	}
 }
 
-func PartsModelToRepo(in []model.Part) []*repoModel.Part {
+func PartsModelToRepo(in []model.Part) []repoModel.Part {
 	if len(in) == 0 {
 		return nil
 	}
-	out := make([]*repoModel.Part, 0, len(in))
+	out := make([]repoModel.Part, 0, len(in))
 	for i := range in {
-		out = append(out, PartModelToRepo(&in[i]))
+		out = append(out, PartModelToRepo(in[i]))
 	}
 	return out
 }
 
-func PartsRepoToModel(in []*repoModel.Part) []model.Part {
+func PartsRepoToModel(in []repoModel.Part) []model.Part {
 	if len(in) == 0 {
 		return nil
 	}
 	out := make([]model.Part, 0, len(in))
 	for _, p := range in {
-		if mp := PartRepoToModel(p); mp != nil {
-			out = append(out, *mp)
-		}
+		out = append(out, PartRepoToModel(p))
 	}
 	return out
 }

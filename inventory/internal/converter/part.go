@@ -86,7 +86,7 @@ func ManufacturerToProto(m *model.Manufacturer) *inventoryV1.Manufacturer {
 }
 
 // returns string/int64/float64/bool
-func ValueToModel(v *inventoryV1.Value) interface{} {
+func ValueToModel(v *inventoryV1.Value) any {
 	switch k := v.GetKind().(type) {
 	case *inventoryV1.Value_StringValue:
 		return k.StringValue
@@ -131,12 +131,12 @@ func timeToModel(ts *timestamppb.Timestamp) time.Time {
 	return ts.AsTime()
 }
 
-func PartToModel(p *inventoryV1.Part) *model.Part {
+func PartToModel(p *inventoryV1.Part) model.Part {
 	if p == nil {
-		return nil
+		return model.Part{}
 	}
 
-	md := make(map[string]interface{}, len(p.GetMetadata()))
+	md := make(map[string]any, len(p.GetMetadata()))
 	for k, v := range p.GetMetadata() {
 		if v == nil {
 			continue
@@ -144,7 +144,7 @@ func PartToModel(p *inventoryV1.Part) *model.Part {
 		md[k] = ValueToModel(v)
 	}
 
-	return &model.Part{
+	return model.Part{
 		UUID:          p.GetUuid(),
 		Name:          p.GetName(),
 		Description:   p.GetDescription(),
@@ -160,11 +160,7 @@ func PartToModel(p *inventoryV1.Part) *model.Part {
 	}
 }
 
-func PartToProto(m *model.Part) *inventoryV1.Part {
-	if m == nil {
-		return nil
-	}
-
+func PartToProto(m model.Part) *inventoryV1.Part {
 	md := make(map[string]*inventoryV1.Value, len(m.Metadata))
 	for k, v := range m.Metadata {
 		md[k] = ValueToProto(v)
@@ -187,9 +183,9 @@ func PartToProto(m *model.Part) *inventoryV1.Part {
 }
 
 // PartsFilterToModel конвертирует Proto фильтр в доменную модель.
-func PartsFilterToModel(f *inventoryV1.PartsFilter) model.PartsFilter {
+func PartsFilterToModel(f *inventoryV1.PartsFilter) *model.PartsFilter {
 	if f == nil {
-		return model.PartsFilter{}
+		return nil
 	}
 
 	var cats []model.Category
@@ -200,7 +196,7 @@ func PartsFilterToModel(f *inventoryV1.PartsFilter) model.PartsFilter {
 		}
 	}
 
-	return model.PartsFilter{
+	return &model.PartsFilter{
 		Uuids:                 f.GetUuids(),
 		Names:                 f.GetNames(),
 		Categories:            cats,
@@ -212,7 +208,7 @@ func PartsFilterToModel(f *inventoryV1.PartsFilter) model.PartsFilter {
 func PartsToProto(p []model.Part) []*inventoryV1.Part {
 	pbParts := make([]*inventoryV1.Part, 0, len(p))
 	for _, part := range p {
-		pbParts = append(pbParts, PartToProto(&part))
+		pbParts = append(pbParts, PartToProto(part))
 	}
 	return pbParts
 }
