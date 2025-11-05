@@ -34,7 +34,9 @@ vars:
   OPEN_API_ORDER_V1_BUNDLE: '{{.ROOT_DIR}}/shared/api/bundles/order.openapi.v1.bundle.yaml'
 
   OPEN_API_FILES: '{{.ROOT_DIR}}/shared/api/bundles'
-
+  COVERAGE_DIR: '{{.ROOT_DIR}}/coverage'
+  COVERAGE_FILE: total.out
+  
   MODULES: assembly inventory order payment platform iam notification
 
 tasks:
