@@ -1,0 +1,2 @@
+// Code generated for AxMdv go-rocket-factory service
+// © AxMdv 2025.

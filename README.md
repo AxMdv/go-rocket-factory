@@ -1,5 +1,6 @@
 #go-rocket-factory
 
+![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/AxMdv/543fca451a299976faafbbf917c3771e/raw/coverage.json)
 Этот репозиторий содержит проект создания фабрики по производству и продаже космических кораблей.
 
 Для того чтобы вызывать команды из Taskfile, необходимо установить Taskfile CLI:
