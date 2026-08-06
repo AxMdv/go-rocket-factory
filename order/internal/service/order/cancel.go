@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/samber/lo"
-
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
 
@@ -23,8 +21,6 @@ func (s *service) Cancel(ctx context.Context, orderUUID string) error {
 	default:
 		return fmt.Errorf("unknown order status")
 	}
-	updateInfo := model.OrderUpdateInfo{
-		Status: lo.ToPtr(model.OrderStatusCANCELLED),
-	}
-	return s.orderRepository.UpdateOrder(ctx, order.OrderUUID, updateInfo)
+
+	return s.orderRepository.Cancel(ctx, order.OrderUUID)
 }

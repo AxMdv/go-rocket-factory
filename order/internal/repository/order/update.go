@@ -3,42 +3,57 @@ package order
 import (
 	"context"
 
-	"github.com/samber/lo"
-
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
-	repoConverter "github.com/AxMdv/go-rocket-factory/order/internal/repository/converter"
 )
 
-func (r *repository) UpdateOrder(ctx context.Context, orderUUID string, updateInfo model.OrderUpdateInfo) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	order, ok := r.orders[orderUUID]
-	if !ok {
-		return model.ErrOrderNotFound
+func (r *repository) MarkPaid(ctx context.Context, orderUUID string, transactionUUID string, method model.PaymentMethod) error {
+	const query = `
+		UPDATE orders
+		SET
+			status = $2,
+			transaction_uuid = $3,
+			payment_method = $4,
+			updated_at = now()
+		WHERE order_uuid = $1
+			AND status = $5
+	`
+
+	res, err := r.db.Exec(
+		ctx,
+		query,
+		orderUUID,
+		model.OrderStatusPAID,
+		transactionUUID,
+		method,
+		model.OrderStatusPENDINGPAYMENT,
+	)
+	if err != nil {
+		return err
+	}
+	if res.RowsAffected() == 0 {
+		return model.ErrOrderStatusConflict
 	}
 
-	// Обновляем поля, только если они были установлены в запросе
-	if updateInfo.UserUUID != nil {
-		order.UserUUID = *updateInfo.UserUUID
-	}
-	if updateInfo.PartUUIDs != nil {
-		order.PartUUIDs = *updateInfo.PartUUIDs
-	}
+	return nil
+}
 
-	if updateInfo.TotalPrice != nil {
-		order.TotalPrice = *updateInfo.TotalPrice
-	}
-	if updateInfo.TransactionUUID != nil {
-		order.TransactionUUID = updateInfo.TransactionUUID
-	}
-	if updateInfo.PaymentMethod != nil {
-		order.PaymentMethod = lo.ToPtr(repoConverter.PaymentMethodToRepo(*updateInfo.PaymentMethod))
-	}
-	if updateInfo.Status != nil {
-		order.Status = repoConverter.OrderStatusToRepo(*updateInfo.Status)
-	}
+func (r *repository) Cancel(ctx context.Context, orderUUID string) error {
+	const query = `
+		UPDATE orders
+		SET
+			status = $2,
+			updated_at = now()
+		WHERE order_uuid = $1
+			AND status = $3
+	`
 
-	r.orders[orderUUID] = order
+	res, err := r.db.Exec(ctx, query, orderUUID, model.OrderStatusCANCELLED, model.OrderStatusPENDINGPAYMENT)
+	if err != nil {
+		return err
+	}
+	if res.RowsAffected() == 0 {
+		return model.ErrOrderStatusConflict
+	}
 
 	return nil
 }

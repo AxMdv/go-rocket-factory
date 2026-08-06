@@ -5,7 +5,6 @@ import (
 	repoModel "github.com/AxMdv/go-rocket-factory/order/internal/repository/model"
 )
 
-// RepoOrderToModel конвертирует репозитарную сущность в доменную.
 func RepoOrderToModel(r repoModel.Order) model.Order {
 	var tx *string
 	if r.TransactionUUID != nil {
@@ -22,7 +21,7 @@ func RepoOrderToModel(r repoModel.Order) model.Order {
 		OrderUUID:       r.OrderUUID,
 		UserUUID:        r.UserUUID,
 		PartUUIDs:       r.PartUUIDs,
-		TotalPrice:      r.TotalPrice,
+		TotalPriceCents: r.TotalPriceCents,
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
 		Status:          model.OrderStatus(r.Status),
@@ -37,7 +36,6 @@ func PaymentMethodToRepo(m model.PaymentMethod) repoModel.PaymentMethod {
 	return repoModel.PaymentMethod(m)
 }
 
-// ModelOrderToRepo конвертирует доменную сущность в репозитарную.
 func ModelOrderToRepo(m model.Order) repoModel.Order {
 	var tx *string
 	if m.TransactionUUID != nil {
@@ -54,7 +52,7 @@ func ModelOrderToRepo(m model.Order) repoModel.Order {
 		OrderUUID:       m.OrderUUID,
 		UserUUID:        m.UserUUID,
 		PartUUIDs:       m.PartUUIDs,
-		TotalPrice:      m.TotalPrice,
+		TotalPriceCents: m.TotalPriceCents,
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
 		Status:          repoModel.OrderStatus(m.Status),

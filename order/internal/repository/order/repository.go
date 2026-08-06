@@ -1,18 +1,13 @@
 package order
 
-import (
-	"sync"
-
-	repoModel "github.com/AxMdv/go-rocket-factory/order/internal/repository/model"
-)
+import "github.com/jackc/pgx/v5/pgxpool"
 
 type repository struct {
-	mu     sync.RWMutex
-	orders map[string]repoModel.Order
+	db *pgxpool.Pool
 }
 
-func NewRepository() *repository {
+func NewRepository(db *pgxpool.Pool) *repository {
 	return &repository{
-		orders: make(map[string]repoModel.Order),
+		db: db,
 	}
 }

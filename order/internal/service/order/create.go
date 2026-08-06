@@ -9,7 +9,7 @@ import (
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
 
-func (s *service) CreateOrder(ctx context.Context, userUUID string, partUUIDs []string) (orderUUID string, totalPrice float64, err error) {
+func (s *service) CreateOrder(ctx context.Context, userUUID string, partUUIDs []string) (orderUUID string, totalPriceCents int64, err error) {
 	parts, err := s.inventoryClient.ListParts(ctx, partUUIDs)
 	if err != nil {
 		return "", 0, fmt.Errorf("inventory error: %w", err)
@@ -19,19 +19,19 @@ func (s *service) CreateOrder(ctx context.Context, userUUID string, partUUIDs []
 	}
 
 	for _, p := range parts {
-		totalPrice += p.Price
+		totalPriceCents += p.PriceCents
 	}
 
 	order := model.Order{
-		OrderUUID:  uuid.New().String(),
-		UserUUID:   userUUID,
-		PartUUIDs:  partUUIDs,
-		TotalPrice: totalPrice,
-		Status:     model.OrderStatusPENDINGPAYMENT,
+		OrderUUID:       uuid.New().String(),
+		UserUUID:        userUUID,
+		PartUUIDs:       partUUIDs,
+		TotalPriceCents: totalPriceCents,
+		Status:          model.OrderStatusPENDINGPAYMENT,
 	}
 
 	if err := s.orderRepository.CreateOrder(ctx, order); err != nil {
 		return "", 0, err
 	}
-	return order.OrderUUID, totalPrice, nil
+	return order.OrderUUID, totalPriceCents, nil
 }

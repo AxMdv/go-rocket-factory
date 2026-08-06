@@ -9,8 +9,8 @@ func PartsGRPCToModel(grpcParts []*inventoryV1.Part) []model.Part {
 	modelParts := make([]model.Part, 0, len(grpcParts))
 	for _, part := range grpcParts {
 		modelPart := model.Part{
-			UUID:  part.GetUuid(),
-			Price: part.GetPrice(),
+			UUID:       part.GetUuid(),
+			PriceCents: model.PriceToCents(part.GetPrice()),
 		}
 		modelParts = append(modelParts, modelPart)
 	}

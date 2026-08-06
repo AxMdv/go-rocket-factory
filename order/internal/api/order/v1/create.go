@@ -16,7 +16,7 @@ func (a *api) CreateOrder(ctx context.Context, req *orderV1.CreateOrderRequest) 
 			Error: "invalid request",
 		}, nil
 	}
-	orderUUID, totalPrice, err := a.orderService.CreateOrder(ctx, req.GetUserUUID(), req.GetPartUuids())
+	orderUUID, totalPriceCents, err := a.orderService.CreateOrder(ctx, req.GetUserUUID(), req.GetPartUuids())
 	if err != nil {
 		if errors.Is(err, model.ErrPartsNotFound) {
 			return &orderV1.NotFoundError{Error: "some parts not found"}, nil
@@ -25,6 +25,6 @@ func (a *api) CreateOrder(ctx context.Context, req *orderV1.CreateOrderRequest) 
 	}
 	return &orderV1.CreateOrderResponse{
 		OrderUUID:  orderUUID,
-		TotalPrice: totalPrice,
+		TotalPrice: model.CentsToPrice(totalPriceCents),
 	}, nil
 }

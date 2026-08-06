@@ -5,15 +5,12 @@ import (
 	orderV1 "github.com/AxMdv/go-rocket-factory/shared/pkg/openapi/order/v1"
 )
 
-// OrderDtoToModel конвертирует транспортный DTO в доменную модель.
 func OrderDtoToModel(d orderV1.OrderDto) model.Order {
-	// TransactionUUID
 	var tx *string
 	if v, ok := d.TransactionUUID.Get(); ok {
 		tx = &v
 	}
 
-	// PaymentMethod
 	var pm *model.PaymentMethod
 	if v, ok := d.PaymentMethod.Get(); ok {
 		mv := PaymentMethodDtoToModel(v)
@@ -24,14 +21,13 @@ func OrderDtoToModel(d orderV1.OrderDto) model.Order {
 		OrderUUID:       d.GetOrderUUID(),
 		UserUUID:        d.GetUserUUID(),
 		PartUUIDs:       d.GetPartUuids(),
-		TotalPrice:      d.GetTotalPrice(),
+		TotalPriceCents: model.PriceToCents(d.GetTotalPrice()),
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
 		Status:          OrderStatusDtoToModel(d.GetStatus()),
 	}
 }
 
-// OrderModelToDto конвертирует доменную модель в транспортный DTO.
 func OrderModelToDto(m model.Order) orderV1.OrderDto {
 	var tx orderV1.OptNilString
 	if m.TransactionUUID != nil {
@@ -47,14 +43,12 @@ func OrderModelToDto(m model.Order) orderV1.OrderDto {
 		OrderUUID:       m.OrderUUID,
 		UserUUID:        m.UserUUID,
 		PartUuids:       m.PartUUIDs,
-		TotalPrice:      m.TotalPrice,
+		TotalPrice:      model.CentsToPrice(m.TotalPriceCents),
 		TransactionUUID: tx,
 		PaymentMethod:   pm,
 		Status:          OrderStatusModelToDto(m.Status),
 	}
 }
-
-// ----- Enum mapping ----- //
 
 func OrderStatusDtoToModel(s orderV1.OrderStatus) model.OrderStatus {
 	switch s {

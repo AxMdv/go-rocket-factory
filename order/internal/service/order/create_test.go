@@ -15,16 +15,16 @@ func (s *ServiceSuite) TestCreateSuccess() {
 		partUuids = []string{partUUID1, partUUID2}
 
 		part1 = model.Part{
-			UUID:  partUUID1,
-			Price: gofakeit.Price(0, 100),
+			UUID:       partUUID1,
+			PriceCents: 1234,
 		}
 		part2 = model.Part{
-			UUID:  partUUID2,
-			Price: gofakeit.Price(0, 100),
+			UUID:       partUUID2,
+			PriceCents: 5678,
 		}
 		parts = []model.Part{part1, part2}
 
-		totalPrice = part1.Price + part2.Price
+		totalPriceCents = part1.PriceCents + part2.PriceCents
 
 		createOrder = struct {
 			UserUUID  string
@@ -35,11 +35,11 @@ func (s *ServiceSuite) TestCreateSuccess() {
 		}
 
 		expectedOrder = model.Order{
-			OrderUUID:  gofakeit.UUID(),
-			UserUUID:   userUUID,
-			PartUUIDs:  partUuids,
-			TotalPrice: totalPrice,
-			Status:     model.OrderStatusPENDINGPAYMENT,
+			OrderUUID:       gofakeit.UUID(),
+			UserUUID:        userUUID,
+			PartUUIDs:       partUuids,
+			TotalPriceCents: totalPriceCents,
+			Status:          model.OrderStatusPENDINGPAYMENT,
 		}
 	)
 
@@ -49,16 +49,16 @@ func (s *ServiceSuite) TestCreateSuccess() {
 		s.Require().NotEmpty(order.OrderUUID)
 		s.Require().Equal(expectedOrder.UserUUID, order.UserUUID)
 		s.Require().Equal(expectedOrder.PartUUIDs, order.PartUUIDs)
-		s.Require().Equal(expectedOrder.TotalPrice, order.TotalPrice)
+		s.Require().Equal(expectedOrder.TotalPriceCents, order.TotalPriceCents)
 		s.Require().Equal(expectedOrder.Status, order.Status)
 
 		return true
 	})).Return(nil).Once()
 
-	orderUUID, totalPrice, err := s.service.CreateOrder(s.ctx, createOrder.UserUUID, createOrder.PartUUIDs)
+	orderUUID, totalPriceCents, err := s.service.CreateOrder(s.ctx, createOrder.UserUUID, createOrder.PartUUIDs)
 	s.Require().NoError(err)
 	s.Require().NotEmpty(orderUUID)
-	s.Require().Equal(totalPrice, expectedOrder.TotalPrice)
+	s.Require().Equal(expectedOrder.TotalPriceCents, totalPriceCents)
 }
 
 func (s *ServiceSuite) TestCreateInventoryServiceError() {
@@ -87,8 +87,8 @@ func (s *ServiceSuite) TestCreateSomePartsNotFound() {
 		partUuids = []string{partUUID1, partUUID2}
 
 		part1 = model.Part{
-			UUID:  partUUID1,
-			Price: gofakeit.Price(0, 100),
+			UUID:       partUUID1,
+			PriceCents: 1234,
 		}
 
 		parts = []model.Part{part1}
@@ -111,16 +111,16 @@ func (s *ServiceSuite) TestCreateRepoError() {
 		repoErr = gofakeit.Error()
 
 		part1 = model.Part{
-			UUID:  partUUID1,
-			Price: gofakeit.Price(0, 100),
+			UUID:       partUUID1,
+			PriceCents: 1234,
 		}
 		part2 = model.Part{
-			UUID:  partUUID2,
-			Price: gofakeit.Price(0, 100),
+			UUID:       partUUID2,
+			PriceCents: 5678,
 		}
 		parts = []model.Part{part1, part2}
 
-		totalPrice = part1.Price + part2.Price
+		totalPriceCents = part1.PriceCents + part2.PriceCents
 	)
 
 	s.inventoryClient.On("ListParts", s.ctx, partUuids).Return(parts, nil).Once()
@@ -129,7 +129,7 @@ func (s *ServiceSuite) TestCreateRepoError() {
 		s.Require().NotEmpty(order.OrderUUID)
 		s.Require().Equal(userUUID, order.UserUUID)
 		s.Require().Equal(partUuids, order.PartUUIDs)
-		s.Require().Equal(totalPrice, order.TotalPrice)
+		s.Require().Equal(totalPriceCents, order.TotalPriceCents)
 		s.Require().Equal(model.OrderStatusPENDINGPAYMENT, order.Status)
 
 		return true

@@ -2,7 +2,6 @@ package order
 
 import (
 	"github.com/brianvoe/gofakeit/v7"
-	"github.com/samber/lo"
 
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
@@ -20,9 +19,7 @@ func (s *ServiceSuite) TestCancelSuccess() {
 	)
 
 	s.orderRepository.On("Get", s.ctx, orderUUID).Return(&order, nil).Once()
-	s.orderRepository.On("UpdateOrder", s.ctx, orderUUID, model.OrderUpdateInfo{
-		Status: lo.ToPtr(model.OrderStatusCANCELLED),
-	}).Return(nil).Once()
+	s.orderRepository.On("Cancel", s.ctx, orderUUID).Return(nil).Once()
 
 	err := s.service.Cancel(s.ctx, orderUUID)
 	s.Require().NoError(err)
@@ -77,7 +74,7 @@ func (s *ServiceSuite) TestCancelInvalidStatus() {
 	s.Require().ErrorIs(err, model.ErrOrderStatusConflict)
 }
 
-func (s *ServiceSuite) TestCancelRepoUpdateError() {
+func (s *ServiceSuite) TestCancelRepoCancelError() {
 	var (
 		orderUUID = gofakeit.UUID()
 		userUUID  = gofakeit.UUID()
@@ -91,9 +88,7 @@ func (s *ServiceSuite) TestCancelRepoUpdateError() {
 	)
 
 	s.orderRepository.On("Get", s.ctx, orderUUID).Return(&order, nil)
-	s.orderRepository.On("UpdateOrder", s.ctx, orderUUID, model.OrderUpdateInfo{
-		Status: lo.ToPtr(model.OrderStatusCANCELLED),
-	}).Return(repoErr)
+	s.orderRepository.On("Cancel", s.ctx, orderUUID).Return(repoErr)
 
 	err := s.service.Cancel(s.ctx, orderUUID)
 	s.Require().Error(err)

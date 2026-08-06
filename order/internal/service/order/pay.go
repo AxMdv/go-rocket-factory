@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/samber/lo"
-
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
 
@@ -23,12 +21,7 @@ func (s *service) PayOrder(ctx context.Context, orderUUID string, method model.P
 		return "", fmt.Errorf("payment error: %w", err)
 	}
 
-	updateInfo := model.OrderUpdateInfo{
-		Status:          lo.ToPtr(model.OrderStatusPAID),
-		TransactionUUID: &transactionUUID,
-		PaymentMethod:   &method,
-	}
-	if err := s.orderRepository.UpdateOrder(ctx, order.OrderUUID, updateInfo); err != nil {
+	if err := s.orderRepository.MarkPaid(ctx, order.OrderUUID, transactionUUID, method); err != nil {
 		return "", err
 	}
 	return transactionUUID, nil

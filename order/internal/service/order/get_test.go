@@ -12,11 +12,11 @@ func (s *ServiceSuite) TestGetSuccess() {
 		userUUID  = gofakeit.UUID()
 
 		expectedOrder = model.Order{
-			OrderUUID:  orderUUID,
-			UserUUID:   userUUID,
-			PartUUIDs:  []string{gofakeit.UUID(), gofakeit.UUID()},
-			TotalPrice: gofakeit.Price(10, 100),
-			Status:     model.OrderStatusPENDINGPAYMENT,
+			OrderUUID:       orderUUID,
+			UserUUID:        userUUID,
+			PartUUIDs:       []string{gofakeit.UUID(), gofakeit.UUID()},
+			TotalPriceCents: 12345,
+			Status:          model.OrderStatusPENDINGPAYMENT,
 		}
 	)
 

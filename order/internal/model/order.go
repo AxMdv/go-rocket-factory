@@ -19,29 +19,11 @@ const (
 )
 
 type Order struct {
-	// UUID заказа.
-	OrderUUID string `json:"order_uuid"`
-	// UUID пользователя, сделавшего заказ.
-	UserUUID string `json:"user_uuid"`
-	// Список деталей, включённых в заказ.
-	PartUUIDs []string `json:"part_uuids"`
-	// Итоговая стоимость заказа.
-	TotalPrice float64 `json:"total_price"`
-	// UUID транзакции оплаты (если заказ оплачен).
+	OrderUUID       string         `json:"order_uuid"`
+	UserUUID        string         `json:"user_uuid"`
+	PartUUIDs       []string       `json:"part_uuids"`
+	TotalPriceCents int64          `json:"total_price_cents"`
 	TransactionUUID *string        `json:"transaction_uuid,omitempty"`
 	PaymentMethod   *PaymentMethod `json:"payment_method,omitempty"`
 	Status          OrderStatus    `json:"status,omitempty"`
-}
-
-type OrderUpdateInfo struct {
-	// UUID пользователя, сделавшего заказ.
-	UserUUID *string `json:"user_uuid"`
-	// Список деталей, включённых в заказ.
-	PartUUIDs *[]string `json:"part_uuids"`
-	// Итоговая стоимость заказа.
-	TotalPrice *float64 `json:"total_price"`
-	// UUID транзакции оплаты (если заказ оплачен).
-	TransactionUUID *string        `json:"transaction_uuid,omitempty"`
-	PaymentMethod   *PaymentMethod `json:"payment_method,omitempty"`
-	Status          *OrderStatus   `json:"status,omitempty"`
 }

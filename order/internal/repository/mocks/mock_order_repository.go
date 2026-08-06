@@ -25,6 +25,53 @@ func (_m *OrderRepository) EXPECT() *OrderRepository_Expecter {
 	return &OrderRepository_Expecter{mock: &_m.Mock}
 }
 
+// Cancel provides a mock function with given fields: ctx, orderUUID
+func (_m *OrderRepository) Cancel(ctx context.Context, orderUUID string) error {
+	ret := _m.Called(ctx, orderUUID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Cancel")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, orderUUID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// OrderRepository_Cancel_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Cancel'
+type OrderRepository_Cancel_Call struct {
+	*mock.Call
+}
+
+// Cancel is a helper method to define mock.On call
+//   - ctx context.Context
+//   - orderUUID string
+func (_e *OrderRepository_Expecter) Cancel(ctx interface{}, orderUUID interface{}) *OrderRepository_Cancel_Call {
+	return &OrderRepository_Cancel_Call{Call: _e.mock.On("Cancel", ctx, orderUUID)}
+}
+
+func (_c *OrderRepository_Cancel_Call) Run(run func(ctx context.Context, orderUUID string)) *OrderRepository_Cancel_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *OrderRepository_Cancel_Call) Return(_a0 error) *OrderRepository_Cancel_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *OrderRepository_Cancel_Call) RunAndReturn(run func(context.Context, string) error) *OrderRepository_Cancel_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateOrder provides a mock function with given fields: ctx, order
 func (_m *OrderRepository) CreateOrder(ctx context.Context, order model.Order) error {
 	ret := _m.Called(ctx, order)
@@ -131,17 +178,17 @@ func (_c *OrderRepository_Get_Call) RunAndReturn(run func(context.Context, strin
 	return _c
 }
 
-// UpdateOrder provides a mock function with given fields: ctx, orderUUID, order
-func (_m *OrderRepository) UpdateOrder(ctx context.Context, orderUUID string, order model.OrderUpdateInfo) error {
-	ret := _m.Called(ctx, orderUUID, order)
+// MarkPaid provides a mock function with given fields: ctx, orderUUID, transactionUUID, method
+func (_m *OrderRepository) MarkPaid(ctx context.Context, orderUUID string, transactionUUID string, method model.PaymentMethod) error {
+	ret := _m.Called(ctx, orderUUID, transactionUUID, method)
 
 	if len(ret) == 0 {
-		panic("no return value specified for UpdateOrder")
+		panic("no return value specified for MarkPaid")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, model.OrderUpdateInfo) error); ok {
-		r0 = rf(ctx, orderUUID, order)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, model.PaymentMethod) error); ok {
+		r0 = rf(ctx, orderUUID, transactionUUID, method)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -149,32 +196,33 @@ func (_m *OrderRepository) UpdateOrder(ctx context.Context, orderUUID string, or
 	return r0
 }
 
-// OrderRepository_UpdateOrder_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateOrder'
-type OrderRepository_UpdateOrder_Call struct {
+// OrderRepository_MarkPaid_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MarkPaid'
+type OrderRepository_MarkPaid_Call struct {
 	*mock.Call
 }
 
-// UpdateOrder is a helper method to define mock.On call
+// MarkPaid is a helper method to define mock.On call
 //   - ctx context.Context
 //   - orderUUID string
-//   - order model.OrderUpdateInfo
-func (_e *OrderRepository_Expecter) UpdateOrder(ctx interface{}, orderUUID interface{}, order interface{}) *OrderRepository_UpdateOrder_Call {
-	return &OrderRepository_UpdateOrder_Call{Call: _e.mock.On("UpdateOrder", ctx, orderUUID, order)}
+//   - transactionUUID string
+//   - method model.PaymentMethod
+func (_e *OrderRepository_Expecter) MarkPaid(ctx interface{}, orderUUID interface{}, transactionUUID interface{}, method interface{}) *OrderRepository_MarkPaid_Call {
+	return &OrderRepository_MarkPaid_Call{Call: _e.mock.On("MarkPaid", ctx, orderUUID, transactionUUID, method)}
 }
 
-func (_c *OrderRepository_UpdateOrder_Call) Run(run func(ctx context.Context, orderUUID string, order model.OrderUpdateInfo)) *OrderRepository_UpdateOrder_Call {
+func (_c *OrderRepository_MarkPaid_Call) Run(run func(ctx context.Context, orderUUID string, transactionUUID string, method model.PaymentMethod)) *OrderRepository_MarkPaid_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(string), args[2].(model.OrderUpdateInfo))
+		run(args[0].(context.Context), args[1].(string), args[2].(string), args[3].(model.PaymentMethod))
 	})
 	return _c
 }
 
-func (_c *OrderRepository_UpdateOrder_Call) Return(_a0 error) *OrderRepository_UpdateOrder_Call {
+func (_c *OrderRepository_MarkPaid_Call) Return(_a0 error) *OrderRepository_MarkPaid_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *OrderRepository_UpdateOrder_Call) RunAndReturn(run func(context.Context, string, model.OrderUpdateInfo) error) *OrderRepository_UpdateOrder_Call {
+func (_c *OrderRepository_MarkPaid_Call) RunAndReturn(run func(context.Context, string, string, model.PaymentMethod) error) *OrderRepository_MarkPaid_Call {
 	_c.Call.Return(run)
 	return _c
 }

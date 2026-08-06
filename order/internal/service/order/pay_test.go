@@ -2,7 +2,6 @@ package order
 
 import (
 	"github.com/brianvoe/gofakeit/v7"
-	"github.com/samber/lo"
 
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
@@ -24,11 +23,7 @@ func (s *ServiceSuite) TestPaySuccess() {
 	s.orderRepository.On("Get", s.ctx, orderUUID).Return(&order, nil).Once()
 	s.paymentClient.On("PayOrder", s.ctx, orderUUID, userUUID, paymentMethod).
 		Return(transactionUUID, nil).Once()
-	s.orderRepository.On("UpdateOrder", s.ctx, orderUUID, model.OrderUpdateInfo{
-		TransactionUUID: lo.ToPtr(transactionUUID),
-		PaymentMethod:   lo.ToPtr(paymentMethod),
-		Status:          lo.ToPtr(model.OrderStatusPAID),
-	}).Return(nil).Once()
+	s.orderRepository.On("MarkPaid", s.ctx, orderUUID, transactionUUID, paymentMethod).Return(nil).Once()
 
 	res, err := s.service.PayOrder(s.ctx, orderUUID, paymentMethod)
 	s.Require().NoError(err)
@@ -104,7 +99,7 @@ func (s *ServiceSuite) TestPayPaymentClientError() {
 	s.Require().ErrorContains(err, "payment error")
 }
 
-func (s *ServiceSuite) TestPayRepoUpdateError() {
+func (s *ServiceSuite) TestPayRepoMarkPaidError() {
 	var (
 		orderUUID       = gofakeit.UUID()
 		userUUID        = gofakeit.UUID()
@@ -122,11 +117,7 @@ func (s *ServiceSuite) TestPayRepoUpdateError() {
 	s.orderRepository.On("Get", s.ctx, orderUUID).Return(&order, nil).Once()
 	s.paymentClient.On("PayOrder", s.ctx, orderUUID, userUUID, paymentMethod).
 		Return(transactionUUID, nil).Once()
-	s.orderRepository.On("UpdateOrder", s.ctx, orderUUID, model.OrderUpdateInfo{
-		TransactionUUID: lo.ToPtr(transactionUUID),
-		PaymentMethod:   lo.ToPtr(paymentMethod),
-		Status:          lo.ToPtr(model.OrderStatusPAID),
-	}).Return(repoErr).Once()
+	s.orderRepository.On("MarkPaid", s.ctx, orderUUID, transactionUUID, paymentMethod).Return(repoErr).Once()
 
 	_, err := s.service.PayOrder(s.ctx, orderUUID, paymentMethod)
 	s.Require().Error(err)
