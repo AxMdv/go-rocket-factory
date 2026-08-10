@@ -6,7 +6,7 @@ import (
 	"github.com/AxMdv/go-rocket-factory/order/internal/model"
 )
 
-func (r *repository) MarkPaid(ctx context.Context, orderUUID string, transactionUUID string, method model.PaymentMethod) error {
+func (r *repository) MarkPaid(ctx context.Context, orderUUID, transactionUUID string, method model.PaymentMethod) error {
 	const query = `
 		UPDATE orders
 		SET
