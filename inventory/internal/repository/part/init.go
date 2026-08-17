@@ -12,13 +12,13 @@ import (
 	repoModel "github.com/AxMdv/go-rocket-factory/inventory/internal/repository/model"
 )
 
-func createRepoParts(count int) map[string]repoModel.Part {
+func createRepoParts(count int) []repoModel.Part {
 	err := gofakeit.Seed(time.Now().UnixNano())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	parts := make(map[string]repoModel.Part, count)
+	parts := make([]repoModel.Part, 0, count)
 
 	categories := []repoModel.Category{
 		repoModel.CategoryEngine,
@@ -92,7 +92,7 @@ func createRepoParts(count int) map[string]repoModel.Part {
 			UpdatedAt:     now,
 		}
 
-		parts[id] = part
+		parts = append(parts, part)
 	}
 
 	return parts

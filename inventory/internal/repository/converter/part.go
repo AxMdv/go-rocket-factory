@@ -5,7 +5,7 @@ import (
 	repoModel "github.com/AxMdv/go-rocket-factory/inventory/internal/repository/model"
 )
 
-func categoryModelToRepo(c model.Category) repoModel.Category {
+func CategoryModelToRepo(c model.Category) repoModel.Category {
 	switch c {
 	case model.CategoryEngine:
 		return repoModel.CategoryEngine
@@ -88,7 +88,7 @@ func PartModelToRepo(p model.Part) repoModel.Part {
 		Description:   p.Description,
 		Price:         p.Price,
 		StockQuantity: p.StockQuantity,
-		Category:      categoryModelToRepo(p.Category),
+		Category:      CategoryModelToRepo(p.Category),
 		Dimensions:    dimensionsModelToRepo(p.Dimensions),
 		Manufacturer:  manufacturerModelToRepo(p.Manufacturer),
 		Tags:          p.Tags,
@@ -135,38 +135,4 @@ func PartsRepoToModel(in []repoModel.Part) []model.Part {
 		out = append(out, PartRepoToModel(p))
 	}
 	return out
-}
-
-func PartsFilterModelToRepo(f *model.PartsFilter) *repoModel.PartsFilter {
-	if f == nil {
-		return nil
-	}
-	cats := make([]repoModel.Category, 0, len(f.Categories))
-	for _, c := range f.Categories {
-		cats = append(cats, categoryModelToRepo(c))
-	}
-	return &repoModel.PartsFilter{
-		Uuids:                 f.Uuids,
-		Names:                 f.Names,
-		Categories:            cats,
-		ManufacturerCountries: f.ManufacturerCountries,
-		Tags:                  f.Tags,
-	}
-}
-
-func PartsFilterRepoToModel(f *repoModel.PartsFilter) *model.PartsFilter {
-	if f == nil {
-		return nil
-	}
-	cats := make([]model.Category, 0, len(f.Categories))
-	for _, c := range f.Categories {
-		cats = append(cats, categoryRepoToModel(c))
-	}
-	return &model.PartsFilter{
-		Uuids:                 f.Uuids,
-		Names:                 f.Names,
-		Categories:            cats,
-		ManufacturerCountries: f.ManufacturerCountries,
-		Tags:                  f.Tags,
-	}
 }
